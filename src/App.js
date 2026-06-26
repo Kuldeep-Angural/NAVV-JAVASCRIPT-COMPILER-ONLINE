@@ -1,3 +1,4 @@
+/* eslint-disable no-new-func */
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { Toolbar } from "./components/Toolbar";
