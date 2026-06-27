@@ -1,6 +1,6 @@
 /* eslint-disable no-new-func */
 import { Box, Card, CardContent, Link, Typography, useMediaQuery, useTheme } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import APPButton from './components/APPButton';
 import APPModal from './components/APPModal';
@@ -64,13 +64,13 @@ export default function App() {
 
   const canSave = Boolean(code?.trim()) && isDirty;
 
-  const handleSave = () => {
+  const handleSave = useCallback(() => {
     if (!canSave) {
       return;
     }
 
     setShowSaveModal(true);
-  };
+  }, [canSave]);
 
   const openCoffeeModal = () => {
     setShowCoffeeModal(true);
