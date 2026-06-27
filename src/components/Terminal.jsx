@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-export const Terminal = ({ output, width }) => {
+export const Terminal = ({ output, width, height }) => {
   // 👇 hide terminal completely when width is 0 or "0%"
   if (!width || width === 0 || width === '0%' || width === '0') {
     return null;
@@ -9,17 +9,17 @@ export const Terminal = ({ output, width }) => {
   return (
     <Box
       sx={{
-        height: '100%',
+        height: height,
         width: width,
         minWidth: 280,
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        borderLeft: '1px solid',
         borderColor: 'divider',
+        border: 'none',
       }}
     >
-      <p style={{ background: '#18181b', color: 'grey', fontSize: '18px' }}>Terminal</p>
+      <p style={{ background: '#1e1e1e', color: 'grey', fontSize: '18px' }}>Terminal</p>
 
       <Box
         component="pre"

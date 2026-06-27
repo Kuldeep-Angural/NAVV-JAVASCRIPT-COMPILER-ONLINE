@@ -1,14 +1,14 @@
 /* eslint-disable no-new-func */
-import { Box, Card, CardContent, Link, Typography } from '@mui/material';
+import { Box, Card, CardContent, Link, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import './App.css';
 import APPButton from './components/APPButton';
 import APPModal from './components/APPModal';
 import { Editor } from './components/Editor';
+import SocialIcon from './components/SocialIcon';
 import { Terminal } from './components/Terminal';
 import { Toolbar } from './components/Toolbar';
 import { STORAGE_KEY } from './constants/appConstant';
-import SocialIcon from './components/SocialIcon';
 export default function App() {
   const [code, setCode] = useState('console.log("Hello World");');
   const [output, setOutput] = useState('');
@@ -20,7 +20,8 @@ export default function App() {
   const [fontSize, setFontSize] = useState(16);
   const [theme, setTheme] = useState('vs-dark');
   const editorRef = useRef(null);
-
+  const muiTheme = useTheme();
+  const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
   const formatLogValue = (value) => {
     if (typeof value === 'string') {
       return value;
@@ -120,13 +121,37 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        handleSave();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleSave]);
+
   return (
     <div className="app">
       <Toolbar runCode={runCode} formatCode={formatCode} handleSave={handleSave} canSave={canSave} theme={theme} setTheme={setTheme} openinfo={openCoffeeModal} setFontSize={setFontSize} fontSize={fontSize} setShowTerminal={setShowTerminal} showTerminal={showTerminal} />
-      <div className="workspace">
-        <Editor width={showTerminal ? '75%' : '100%'} code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
-        <Terminal width={showTerminal ? '25%' : '0%'} output={output} />
-      </div>
+      {!isMobile && (
+        <Box className="workspace">
+          <Editor width={showTerminal ? '75%' : '100%'} height="100%" code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
+          <Terminal height={'100%'} width={showTerminal ? '25%' : '0%'} output={output} />
+        </Box>
+      )}
+
+      {isMobile && (
+        <Box className="" sx={{ height: 'calc(100vh - 60px)', display: 'flex', flexDirection: 'column' }}>
+          <Editor width={'100%'} height={showTerminal ? '80%' : '100%'} code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
+          <Terminal width={'100%'} height={showTerminal ? '20%' : '0%'} output={output} />
+        </Box>
+      )}
       <APPModal
         open={showSaveModal}
         onClose={() => setShowSaveModal(false)}

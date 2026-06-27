@@ -1,11 +1,11 @@
 import { Box } from '@mui/material';
 import MonacoEditor from '@monaco-editor/react';
 
-export const Editor = ({ code, setCode, editorRef, theme, fontSize = 16, width = '75%' }) => {
+export const Editor = ({ code, setCode, editorRef, theme, fontSize = 16, width = '75%', height }) => {
   return (
     <Box
       sx={{
-        height: '100%',
+        height: height,
         width: width,
         overflow: 'hidden',
       }}
