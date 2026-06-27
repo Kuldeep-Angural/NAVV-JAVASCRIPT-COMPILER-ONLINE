@@ -23,18 +23,22 @@ export default function App() {
   const muiTheme = useTheme();
   const isMobile = useMediaQuery(muiTheme.breakpoints.down('md'));
   const formatLogValue = (value) => {
-    if (typeof value === 'string') {
-      return value;
-    }
-    if (typeof value === 'undefined') {
-      return 'undefined';
+    if (typeof value === 'string') {return value;}
+    if (typeof value === 'undefined') {return 'undefined';}
+
+    if (Array.isArray(value)) {
+      return `[${value.map(formatLogValue).join(', ')}]`;
     }
 
-    try {
-      return JSON.stringify(value, null, 2);
-    } catch {
-      return String(value);
+    if (value && typeof value === 'object') {
+      return Object.prototype.toString.call(value) === '[object Object]'
+        ? `{ ${Object.entries(value)
+          .map(([k, v]) => `${k}: ${formatLogValue(v)}`)
+          .join(', ')} }`
+        : String(value);
     }
+
+    return String(value);
   };
 
   useEffect(() => {
