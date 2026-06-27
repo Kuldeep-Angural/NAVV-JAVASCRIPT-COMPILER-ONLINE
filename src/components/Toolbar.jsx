@@ -1,148 +1,137 @@
-export const Toolbar = ({
-  runCode,
-  formatCode,
-  handleSave,
-  canSave,
-  theme,
-  setTheme,
-  openinfo,
-}) => {
+import { AppBar, Toolbar as MuiToolbar, Box, Typography, FormControl, Select, MenuItem, IconButton, Tooltip, Button } from '@mui/material';
+import TerminalIcon from '@mui/icons-material/Terminal';
+import SaveIcon from '@mui/icons-material/Save';
+import { FONT_SIZES, THEMES } from '../constants/appConstant';
+import { format_icon, info_icon, run_icon, save_icon } from '../constants/svgs';
+
+export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTheme, openinfo, setFontSize, fontSize, showTerminal, setShowTerminal }) => {
+  const handleFontChange = (event) => {
+    setFontSize(Number(event.target.value));
+  };
+
   return (
-    <div
-      className="toolbar"
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        background: "#111827",
-        alignItems: "center",
-        height: "7vh",
-        borderBottom: "1px solid #333",
+    <AppBar
+      position="static"
+      elevation={1}
+      sx={{
+        bgcolor: '#111827',
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        height: '60px',
       }}
     >
-      {/* Left */}
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <img
-          src="./logo.png"
-          alt="JavaScript Logo"
-          style={{
-            width: "60px",
-            height: "55px",
-            objectFit: "contain",
-          }}
-        />
-
-        <span
-          style={{
-            fontSize: "18px",
-            fontWeight: 600,
-            fontFamily: "monospace",
-            color: "#fff",
-          }}
-        >
-          NavvJS
-        </span>
-      </div>
-
-      {/* Right */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-        }}
-      >
-        <button onClick={formatCode} title="Format Code">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-file-braces-corner-icon lucide-file-braces-corner"
+      <MuiToolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Left */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} gap={2}>
+          <Box
+            component="img"
+            src="./logo.png"
+            alt="NavvJS Logo"
+            sx={{
+              width: 60,
+              height: 55,
+              objectFit: 'contain',
+            }}
+          />
+          <Typography
+            variant="h6"
+            sx={{
+              fontFamily: 'monospace',
+              fontWeight: 700,
+            }}
           >
-            <path d="M14 22h4a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v6" />
-            <path d="M14 2v5a1 1 0 0 0 1 1h5" />
-            <path d="M5 14a1 1 0 0 0-1 1v2a1 1 0 0 1-1 1 1 1 0 0 1 1 1v2a1 1 0 0 0 1 1" />
-            <path d="M9 22a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1 1 1 0 0 1-1-1v-2a1 1 0 0 0-1-1" />
-          </svg>
-        </button>
+            NavvJS
+          </Typography>
+        </Box>
 
-        <select
-          hidden
-          value={theme}
-          onChange={(event) => setTheme(event.target.value)}
-          style={{
-            padding: "8px 10px",
-            borderRadius: "6px",
-            border: "1px solid #4b5563",
-            background: "#111827",
-            color: "white",
-          }}
-        >
-          <option value="vs-dark">VS Dark</option>
-          <option value="vs">VS Light</option>
-          <option value="hc-black">High Contrast</option>
-          <option value="hc-light">High Contrast Light</option>
-        </select>
+        {/* Right */}
+        <Box display="flex" alignItems="center" gap={1.5}>
+          {/* Font Size */}
+          <FormControl size="small">
+            <Select
+              value={fontSize}
+              onChange={handleFontChange}
+              sx={{
+                minWidth: 50,
+                color: 'white',
+                '.MuiOutlinedInput-notchedOutline': {
+                  border: 'none',
+                },
+                '& .MuiSvgIcon-root': {
+                  color: 'white',
+                },
+              }}
+            >
+              {FONT_SIZES.map((size) => (
+                <MenuItem key={size} value={size}>
+                  {size}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <button onClick={handleSave} disabled={!canSave} title="Save Code">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-save-icon lucide-save"
-          >
-            <path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" />
-            <path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7" />
-            <path d="M7 3v4a1 1 0 0 0 1 1h7" />
-          </svg>
-        </button>
+          {/* Theme */}
+          <FormControl size="small">
+            <Select
+              value={theme}
+              onChange={(e) => setTheme(e.target.value)}
+              sx={{
+                minWidth: 60,
+                color: 'white',
+                '.MuiOutlinedInput-notchedOutline': {
+                  border: 'none',
+                },
+                '& .MuiSvgIcon-root': {
+                  color: 'white',
+                },
+              }}
+            >
+              {THEMES.map((item) => (
+                <MenuItem key={item} value={item}>
+                  {item}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-        <button onClick={runCode} title="Run Code">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-play-icon lucide-play"
-          >
-            <path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z" />
-          </svg>
-        </button>
-        <button onClick={openinfo} title="Information">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-info-icon lucide-info"
-          >
-            <circle cx="12" cy="12" r="10" />
-            <path d="M12 16v-4" />
-            <path d="M12 8h.01" />
-          </svg>
-        </button>
-      </div>
-    </div>
+          {/* Format */}
+          <Tooltip title="Format Code">
+            <IconButton color="inherit" onClick={formatCode}>
+              {format_icon}
+            </IconButton>
+          </Tooltip>
+
+          {/* Save */}
+          <Tooltip title="Save Code">
+            <IconButton color="inherit" onClick={handleSave} disabled={!canSave}>
+              {save_icon}
+            </IconButton>
+          </Tooltip>
+
+          {/* Run */}
+          <Tooltip title="Run Code">
+            <IconButton color="inherit" onClick={runCode}>
+              {run_icon}
+            </IconButton>
+          </Tooltip>
+
+          <IconButton size="small" onClick={() => setShowTerminal(!showTerminal)}>
+            {/* 🔥 active line indicator */}
+            <TerminalIcon
+              style={{
+                color: showTerminal ? '#4caf50' : 'white',
+              }}
+            />
+          </IconButton>
+
+          {/* Info */}
+          <Tooltip title="Information">
+            <IconButton color="inherit" onClick={openinfo}>
+              {info_icon}
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </MuiToolbar>
+    </AppBar>
   );
 };

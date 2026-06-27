@@ -1,25 +1,33 @@
 /* eslint-disable no-new-func */
-import { useEffect, useRef, useState } from "react";
-import "./App.css";
-import { Toolbar } from "./components/Toolbar";
-import { Editor } from "./components/Editor";
-import { Terminal } from "./components/Terminal";
-
-const STORAGE_KEY = "compiler-code";
-
+import { Box, Card, CardContent, Link, Typography } from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import './App.css';
+import APPButton from './components/APPButton';
+import APPModal from './components/APPModal';
+import { Editor } from './components/Editor';
+import { Terminal } from './components/Terminal';
+import { Toolbar } from './components/Toolbar';
+import { STORAGE_KEY } from './constants/appConstant';
+import SocialIcon from './components/SocialIcon';
 export default function App() {
-  const [code, setCode] = useState(`console.log("Hello World");`);
-  const [output, setOutput] = useState("");
-  const [savedCode, setSavedCode] = useState(`console.log("Hello World");`);
+  const [code, setCode] = useState('console.log("Hello World");');
+  const [output, setOutput] = useState('');
+  const [savedCode, setSavedCode] = useState('console.log("Hello World");');
   const [isDirty, setIsDirty] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [showCoffeeModal, setShowCoffeeModal] = useState(false);
-  const [theme, setTheme] = useState("vs-dark");
+  const [showTerminal, setShowTerminal] = useState(true);
+  const [fontSize, setFontSize] = useState(16);
+  const [theme, setTheme] = useState('vs-dark');
   const editorRef = useRef(null);
 
   const formatLogValue = (value) => {
-    if (typeof value === "string") return value;
-    if (typeof value === "undefined") return "undefined";
+    if (typeof value === 'string') {
+      return value;
+    }
+    if (typeof value === 'undefined') {
+      return 'undefined';
+    }
 
     try {
       return JSON.stringify(value, null, 2);
@@ -48,9 +56,7 @@ export default function App() {
 
   const formatCode = () => {
     if (editorRef.current?.getAction) {
-      const formatAction = editorRef.current.getAction(
-        "editor.action.formatDocument",
-      );
+      const formatAction = editorRef.current.getAction('editor.action.formatDocument');
       formatAction?.run();
     }
   };
@@ -74,14 +80,14 @@ export default function App() {
   };
 
   const saveAsFile = () => {
-    const blob = new Blob([code], { type: "text/javascript" });
+    const blob = new Blob([code], { type: 'text/javascript' });
     const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = "index.js";
+    link.download = 'index.js';
     link.click();
     window.URL.revokeObjectURL(url);
-    setOutput("Downloaded index.js");
+    setOutput('Downloaded index.js');
     setShowSaveModal(false);
   };
 
@@ -90,9 +96,9 @@ export default function App() {
       window.localStorage.setItem(STORAGE_KEY, code);
       setSavedCode(code);
       setIsDirty(false);
-      setOutput("Saved to browser storage");
+      setOutput('Saved to browser storage');
     } catch {
-      setOutput("Could not save to browser storage");
+      setOutput('Could not save to browser storage');
     }
 
     setShowSaveModal(false);
@@ -101,15 +107,12 @@ export default function App() {
   const runCode = () => {
     const logs = [];
     const original = console.log;
-
     try {
       console.log = (...args) => {
-        logs.push(args.map(formatLogValue).join(" "));
+        logs.push(args.map(formatLogValue).join(' '));
       };
-
       new Function(code)();
-
-      setOutput(logs.join("\n") || "Code Executed");
+      setOutput(logs.join('\n') || 'Code Executed');
     } catch (err) {
       setOutput(`❌ ${err?.message ?? String(err)}`);
     } finally {
@@ -119,223 +122,115 @@ export default function App() {
 
   return (
     <div className="app">
-      <Toolbar
-        runCode={runCode}
-        formatCode={formatCode}
-        handleSave={handleSave}
-        canSave={canSave}
-        theme={theme}
-        setTheme={setTheme}
-        openinfo={openCoffeeModal}
-      />
+      <Toolbar runCode={runCode} formatCode={formatCode} handleSave={handleSave} canSave={canSave} theme={theme} setTheme={setTheme} openinfo={openCoffeeModal} setFontSize={setFontSize} fontSize={fontSize} setShowTerminal={setShowTerminal} showTerminal={showTerminal} />
       <div className="workspace">
-        <Editor
-          code={code}
-          setCode={handleEditorChange}
-          editorRef={editorRef}
-          theme={theme}
-        />
-        <Terminal output={output} />
+        <Editor width={showTerminal ? '75%' : '100%'} code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
+        <Terminal width={showTerminal ? '25%' : '0%'} output={output} />
       </div>
+      <APPModal
+        open={showSaveModal}
+        onClose={() => setShowSaveModal(false)}
+        title="Save Code"
+        actions={
+          <>
+            <APPButton onClick={() => setShowSaveModal(false)} variant="outlined">
+              Cancel
+            </APPButton>
+            <APPButton variant="contained" onClick={saveAsFile}>
+              Download
+            </APPButton>
+            <APPButton variant="contained" onClick={saveToBrowserStorage}>
+              Save
+            </APPButton>
+          </>
+        }
+      >
+        <div style={{ paddingTop: 10 }}>Choose how you want to save your code.</div>
+      </APPModal>
 
-      {showSaveModal && (
-        <div className="modal-overlay" onClick={() => setShowSaveModal(false)}>
-          <div className="modal" onClick={(event) => event.stopPropagation()}>
-            <h3>Save options</h3>
-            <p>Choose where to keep your code.</p>
-            <div className="modal-actions">
-              <button onClick={saveAsFile}>Save as file</button>
-              <button onClick={saveToBrowserStorage}>Save in browser</button>
-              <button
-                className="secondary"
-                onClick={() => setShowSaveModal(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {showCoffeeModal && (
-        <div
-          className="modal-overlay"
-          onClick={closeCoffeeModal}
-          style={{
-            position: "fixed",
-            inset: 0,
-            background: "rgba(0,0,0,0.65)",
-            backdropFilter: "blur(6px)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 999,
-            padding: "20px",
+      <APPModal open={showCoffeeModal} onClose={closeCoffeeModal} title="information" maxWidth="xs">
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 2,
+            pt: 1,
           }}
         >
-          <div
-            className="modal"
-            onClick={(event) => event.stopPropagation()}
-            style={{
-              width: "100%",
-              maxWidth: "450px",
-              borderRadius: "20px",
-              overflow: "hidden",
-              boxShadow:
-                "0 20px 50px rgba(0,0,0,.15), 0 10px 20px rgba(0,0,0,.08)",
-              animation: "fadeIn .2s ease",
+          <Typography variant="body1" sx={{ color: 'white' }}>
+            Author: <strong>Kuldeep Kumar</strong>
+          </Typography>
+
+          <Typography variant="body2" sx={{ color: 'white' }}>
+            🌐: 
+            <Link href="https://kuldeepinfo.vercel.app" target="_blank" underline="hover">
+              kuldeepinfo.vercel.app
+            </Link>
+          </Typography>
+
+          <Typography variant="body1" sx={{ color: 'white' }}>
+            Email:{' '}
+            <Link href="mailto:kuldeep.navv@gmail.com" underline="hover">
+              kuldeep.navv@gmail.com
+            </Link>
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              fontWeight: 500,
             }}
           >
-            {/* Header */}
-            <div
-              style={{
-                background: "linear-gradient(135deg,#18181B,#27272A)",
-                padding: "10px 14px",
-                textAlign: "center",
+            If this compiler helped you, buy me a coffee ☕
+          </Typography>
+
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Card
+              elevation={0}
+              sx={{
+                p: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                textAlign: 'center',
+                width: 'fit-content',
               }}
             >
-              <div style={{ fontSize: "50px", marginBottom: "0px" }}>☕</div>
-
-              <h2
-                style={{
-                  margin: 0,
-                  fontSize: "28px",
-                  fontWeight: 700,
+              <CardContent
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: 1.5,
+                  '&:last-child': {
+                    pb: 2,
+                  },
                 }}
               >
-                Buy Me a Coffee
-              </h2>
-
-              <p
-                style={{
-                  marginTop: "2px",
-                  color: "#d4d4d8",
-                  fontSize: "14px",
-                }}
-              >
-                Support my work and keep creating amazing things.
-              </p>
-            </div>
-
-            {/* Content */}
-            <div
-              style={{
-                padding: "28px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "22px",
-              }}
-            >
-              {/* Author Card */}
-              <div
-                style={{
-                  border: "1px solid #ececec",
-                  borderRadius: "14px",
-                  padding: "16px",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "10px",
-                }}
-              >
-                <div style={{ fontWeight: 700, fontSize: "16px" }}>
-                  👨‍💻 Kuldeep Kumar
-                </div>
-
-                <div style={{ color: "#525252", fontSize: "14px" }}>
-                  📧{" "}
-                  <a
-                    href="mailto:kuldeep@insonix.com"
-                    style={{
-                      color: "#2563eb",
-                      textDecoration: "none",
-                    }}
-                  >
-                    kuldeep@insonix.com
-                  </a>
-                </div>
-
-                <div style={{ color: "#525252", fontSize: "14px" }}>
-                  🌐{" "}
-                  <a
-                    href="https://kuldeepinfo.vercel.app"
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      color: "#2563eb",
-                      textDecoration: "none",
-                    }}
-                  >
-                    kuldeepinfo.vercel.app
-                  </a>
-                </div>
-              </div>
-
-              {/* QR */}
-              <div style={{ textAlign: "center" }}>
-                <div
-                  style={{
-                    padding: "18px",
-                    border: "1px solid #eee",
-                    borderRadius: "18px",
-                    background: "#fff",
-                    display: "inline-flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: "12px",
+                <Box
+                  component="img"
+                  src="./upipe-qr.png"
+                  alt="Support QR"
+                  sx={{
+                    width: 180,
+                    height: 180,
+                    objectFit: 'contain',
                   }}
-                >
-                  <img
-                    src="./upipe-qr.png"
-                    alt="Support QR"
-                    style={{
-                      width: "220px",
-                      height: "220px",
-                      objectFit: "contain",
-                      borderRadius: "12px",
-                    }}
-                  />
+                />
 
-                  <div
-                    style={{
-                      fontSize: "14px",
-                      color: "#71717a",
-                    }}
-                  >
-                    Scan QR to support ❤️
-                  </div>
-                </div>
-              </div>
-
-              {/* Footer */}
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <button
-                  onClick={closeCoffeeModal}
-                  style={{
-                    border: "none",
-                    background: "#18181B",
-                    color: "#fff",
-                    padding: "5px 10px",
-                    borderRadius: "10px",
-                    cursor: "pointer",
-                    width: "100%",
-                    fontWeight: 600,
-                    fontSize: "14px",
-                  }}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+                <Typography variant="body2" color="text.secondary">
+                  Scan QR to support ❤️
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
+          <SocialIcon />
+        </Box>
+      </APPModal>
     </div>
-
-
   );
 }

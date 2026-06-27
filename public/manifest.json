@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "NavvJS",
+  "name": "NavvJS Online JavaScript Compiler",
+  "description": "A lightweight browser-based JavaScript compiler and editor for writing and running JS code instantly.",
   "icons": [
     {
       "src": "favicon.ico",
@@ -19,7 +20,8 @@
     }
   ],
   "start_url": ".",
+  "scope": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#000000"
 }

@@ -1,8 +1,15 @@
-import MonacoEditor from "@monaco-editor/react";
+import { Box } from '@mui/material';
+import MonacoEditor from '@monaco-editor/react';
 
-export const Editor = ({ code, setCode, editorRef, theme }) => {
+export const Editor = ({ code, setCode, editorRef, theme, fontSize = 16, width='75%' }) => {
   return (
-    <div className="editor">
+    <Box
+      sx={{
+        height: '100%',
+        width: width,
+        overflow: 'hidden',
+      }}
+    >
       <MonacoEditor
         height="100%"
         language="javascript"
@@ -11,19 +18,21 @@ export const Editor = ({ code, setCode, editorRef, theme }) => {
         onMount={(editor) => {
           editorRef.current = editor;
         }}
-        onChange={(v) => setCode(v)}
+        onChange={(value) => setCode(value ?? '')}
         options={{
           minimap: {
             enabled: false,
           },
-          fontSize: 16,
+          fontSize,
           suggestOnTriggerCharacters: true,
           quickSuggestions: true,
           wordBasedSuggestions: true,
-          autoClosingBrackets: "always",
+          autoClosingBrackets: 'always',
           tabSize: 2,
+          resizeToFitContent: false,
+          scrollBeyondLastLine: false,
         }}
       />
-    </div>
+    </Box>
   );
 };

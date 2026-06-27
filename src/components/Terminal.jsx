@@ -1,8 +1,43 @@
-export const Terminal = ({ output }) => {
+import { Box } from '@mui/material';
+
+export const Terminal = ({ output, width }) => {
+  // 👇 hide terminal completely when width is 0 or "0%"
+  if (!width || width === 0 || width === '0%' || width === '0') {
+    return null;
+  }
+
   return (
-    <div className="terminal">
-      <div className="title">output</div>
-      <pre>{output}</pre>
-    </div>
+    <Box
+      sx={{
+        height: '100%',
+        width: width,
+        minWidth: 280,
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        borderLeft: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
+      <p style={{ background: '#18181b', color: 'grey', fontSize: '18px' }}>Terminal</p>
+
+      <Box
+        component="pre"
+        sx={{
+          flex: 1,
+          m: 0,
+          p: 2,
+          overflow: 'auto',
+          bgcolor: 'grey.900',
+          color: 'success.light',
+          fontFamily: 'Monaco, Consolas, "Courier New", monospace',
+          fontSize: 14,
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+        }}
+      >
+        {output}
+      </Box>
+    </Box>
   );
 };
