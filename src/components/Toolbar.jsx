@@ -27,7 +27,7 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
       position="static"
       elevation={1}
       sx={{
-        bgcolor: '#111827',
+        bgcolor: '#57698f',
         borderBottom: '1px solid',
         borderColor: 'divider',
         height: '60px',
@@ -41,8 +41,8 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
             src="./logo.png"
             alt="NavvJS Logo"
             sx={{
-              width: 60,
-              height: 55,
+              width: 70,
+              height: 65,
               objectFit: 'contain',
             }}
           />
