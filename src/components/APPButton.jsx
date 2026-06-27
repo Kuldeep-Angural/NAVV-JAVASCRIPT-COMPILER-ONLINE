@@ -13,7 +13,7 @@ const APPButton = ({ children, onClick, type = 'button', variant = 'contained', 
       endIcon={!loading ? endIcon : null}
       onClick={onClick}
       sx={{
-        minWidth: 120,
+        minWidth: 50,
         // borderRadius: 2,
         textTransform: 'none',
         fontWeight: 600,
