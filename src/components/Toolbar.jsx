@@ -1,6 +1,5 @@
-import { AppBar, Toolbar as MuiToolbar, Box, Typography, FormControl, Select, MenuItem, IconButton, Tooltip, Button } from '@mui/material';
 import TerminalIcon from '@mui/icons-material/Terminal';
-import SaveIcon from '@mui/icons-material/Save';
+import { AppBar, Box, FormControl, IconButton, MenuItem, Toolbar as MuiToolbar, Select, Tooltip, Typography } from '@mui/material';
 import { FONT_SIZES, THEMES } from '../constants/appConstant';
 import { format_icon, info_icon, run_icon, save_icon } from '../constants/svgs';
 
