@@ -9,15 +9,11 @@
   height: 100vh;
 }
 
-
-
-
 .workspace {
   display: flex;
   height: calc(100vh - 60px);
   overflow: hidden;
 }
-
 
 ::-webkit-scrollbar {
   width: 10px;

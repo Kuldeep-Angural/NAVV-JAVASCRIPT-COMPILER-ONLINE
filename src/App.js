@@ -162,7 +162,7 @@ export default function App() {
           </Typography>
 
           <Typography variant="body2" sx={{ color: 'white' }}>
-            🌐: 
+            🌐:
             <Link href="https://kuldeepinfo.vercel.app" target="_blank" underline="hover">
               kuldeepinfo.vercel.app
             </Link>

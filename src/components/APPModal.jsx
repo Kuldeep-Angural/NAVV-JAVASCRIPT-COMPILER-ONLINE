@@ -1,6 +1,5 @@
-import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Divider } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import React, { ReactNode } from 'react';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@mui/material';
 
 const APPModal = ({ open, onClose, title, children, actions, maxWidth = 'sm', fullWidth = true, showClose = true }) => {
   return (
