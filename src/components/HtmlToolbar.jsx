@@ -3,7 +3,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import { AppBar, Box, Button, FormControl, IconButton, Link, Menu, MenuItem, Toolbar as MuiToolbar, Select, Tooltip, Typography } from '@mui/material';
+import { AppBar, Box, FormControl, IconButton, Link, Menu, MenuItem, Toolbar as MuiToolbar, Select, Tooltip, Typography } from '@mui/material';
 import { useMemo, useState } from 'react';
 import { FONT_SIZES, THEMES } from '../constants/appConstant';
 import { format_icon, info_icon, run_icon } from '../constants/svgs';

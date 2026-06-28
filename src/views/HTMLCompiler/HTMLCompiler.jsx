@@ -1,10 +1,10 @@
-import { Box, Card, CardContent, Link, Tab, Tabs, ThemeProvider, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Card, CardContent, Link, ThemeProvider, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import APPModal from '../../components/APPModal';
 import { Editor } from '../../components/Editor';
 import HtmlToolbar from '../../components/HtmlToolbar';
-import JSCompilerTheme from '../../theme/theme';
-import APPModal from '../../components/APPModal';
 import SocialIcon from '../../components/SocialIcon';
+import JSCompilerTheme from '../../theme/theme';
 
 const defaultHtml = `<!DOCTYPE html>
 <html lang="en">
@@ -86,10 +86,6 @@ const HTMLCompiler = () => {
     }
     return jsCode;
   }, [activeTab, htmlCode, cssCode, jsCode]);
-
-  const handleTabChange = (_event, newValue) => {
-    setActiveTab(newValue);
-  };
 
   const handleEditorChange = useCallback(
     (value) => {
