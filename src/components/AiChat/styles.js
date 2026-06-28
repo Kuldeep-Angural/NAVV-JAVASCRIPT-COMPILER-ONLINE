@@ -10,7 +10,6 @@ export const chatPanelStyles = {
     flexDirection: 'column',
     bgcolor: '#111827',
     color: 'white',
-    borderRadius: 3,
     boxShadow: 8,
     zIndex: 1400,
     overflow: 'hidden',

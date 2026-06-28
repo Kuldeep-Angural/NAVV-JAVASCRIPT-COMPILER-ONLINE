@@ -1,5 +1,6 @@
 import SendIcon from '@mui/icons-material/Send';
-import { Box, IconButton } from '@mui/material';
+import { Box } from '@mui/material';
+import APPButton from '../APPButton';
 import { promptInputStyles } from './styles';
 
 const PromptInput = ({ value, onChange, onSend, isGenerating, placeholder }) => {
@@ -23,18 +24,9 @@ const PromptInput = ({ value, onChange, onSend, isGenerating, placeholder }) => 
       >
         <textarea value={value} onChange={onChange} onKeyDown={handleKeyDown} placeholder={placeholder} disabled={isGenerating} style={promptInputStyles.textarea} />
 
-        <IconButton
-          type="submit"
-          color="primary"
-          disabled={isGenerating || !value?.trim()}
-          sx={{
-            bgcolor: '#2563eb',
-            color: 'white',
-            '&:hover': { bgcolor: '#1d4ed8' },
-          }}
-        >
+        <APPButton type="submit" disabled={isGenerating || !value?.trim()} variant="text">
           <SendIcon fontSize="small" />
-        </IconButton>
+        </APPButton>
       </form>
     </Box>
   );

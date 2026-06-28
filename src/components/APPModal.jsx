@@ -6,6 +6,7 @@ const APPModal = ({ open, onClose, title, children, actions, maxWidth = 'sm', fu
     <Dialog open={open} onClose={onClose} maxWidth={maxWidth} fullWidth={fullWidth}>
       {(title || showClose) && (
         <DialogTitle
+          component="div"
           sx={{
             display: 'flex',
             alignItems: 'center',
@@ -13,7 +14,9 @@ const APPModal = ({ open, onClose, title, children, actions, maxWidth = 'sm', fu
             pb: 1,
           }}
         >
-          <Typography variant="h6">{title}</Typography>
+          <Typography variant="h6" component="div">
+            {title}
+          </Typography>
           <Divider />
           {showClose && (
             <IconButton onClick={onClose}>
