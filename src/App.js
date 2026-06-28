@@ -1,9 +1,9 @@
 import './App.css';
-import HomaePage from './views/HomePage';
+import { APPRoutes } from './config/Routes';
 export default function App() {
   return (
     <div className="app">
-      <HomaePage />
+      <APPRoutes />
     </div>
   );
 }

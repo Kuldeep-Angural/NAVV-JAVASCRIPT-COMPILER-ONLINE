@@ -1,19 +1,20 @@
 /* eslint-disable no-new-func */
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CloseIcon from '@mui/icons-material/Close';
-import { Box, Card, CardContent, Fab, IconButton, Link, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Card, CardContent, Fab, IconButton, Link, ThemeProvider, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import APPButton from '../components/APPButton';
-import APPModal from '../components/APPModal';
-import AIChat from '../components/AiChat/AIChat';
-import { Editor } from '../components/Editor';
-import SocialIcon from '../components/SocialIcon';
-import { Terminal } from '../components/Terminal';
-import { Toolbar } from '../components/Toolbar';
-import { STATIC_CODE_SNIPPET, STORAGE_KEY } from '../constants/appConstant';
-import AIService from '../services/AIService';
-import { readFilesAsText, validateSelectedFiles } from '../utils/fileUtils';
-export default function HomaePage() {
+import APPButton from '../../components/APPButton';
+import APPModal from '../../components/APPModal';
+import AIChat from '../../components/AiChat/AIChat';
+import { Editor } from '../../components/Editor';
+import SocialIcon from '../../components/SocialIcon';
+import { Terminal } from '../../components/Terminal';
+import { Toolbar } from '../../components/Toolbar';
+import { STATIC_CODE_SNIPPET, STORAGE_KEY } from '../../constants/appConstant';
+import AIService from '../../services/AIService';
+import JSCompilerTheme from '../../theme/theme';
+import { readFilesAsText, validateSelectedFiles } from '../../utils/fileUtils';
+export default function JSCompiler() {
   const createFileState = (name, content = '') => ({
     id: `${name}-${Math.random().toString(36).slice(2, 9)}`,
     name,
@@ -268,11 +269,57 @@ export default function HomaePage() {
   }, [handleSave]);
 
   return (
-    <div className="app">
-      <Toolbar runCode={runCode} formatCode={formatCode} handleSave={handleSave} canSave={canSave} theme={theme} setTheme={setTheme} openinfo={openCoffeeModal} setFontSize={setFontSize} fontSize={fontSize} setShowTerminal={setShowTerminal} showTerminal={showTerminal} handleOpenFiles={handleOpenFiles} />
-      {!isMobile && (
-        <Box className="workspace">
-          <Box sx={{ width: showTerminal ? '75%' : '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <ThemeProvider theme={JSCompilerTheme}>
+      <div className="app">
+        <Toolbar runCode={runCode} formatCode={formatCode} handleSave={handleSave} canSave={canSave} theme={theme} setTheme={setTheme} openinfo={openCoffeeModal} setFontSize={setFontSize} fontSize={fontSize} setShowTerminal={setShowTerminal} showTerminal={showTerminal} handleOpenFiles={handleOpenFiles} />
+        {!isMobile && (
+          <Box className="workspace">
+            <Box sx={{ width: showTerminal ? '75%' : '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, overflow: 'hidden', bgcolor: '#1f2937', borderBottom: '1px solid rgba(255,255,255,0.12)', overflowX: 'auto' }}>
+                {openFiles.map((file) => (
+                  <Box
+                    key={file.id}
+                    component="button"
+                    onClick={() => setActiveFileId(file.id)}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 0.75,
+                      px: 1.25,
+                      py: 0.75,
+                      border: file.id === activeFileId ? '1px solid #60a5fa' : '1px solid transparent',
+                      bgcolor: file.id === activeFileId ? '#374151' : '#111827',
+                      color: 'white',
+                      cursor: 'pointer',
+                      minWidth: 120,
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <Typography variant="body2" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {file.name}
+                      {file.isDirty ? ' •' : ''}
+                    </Typography>
+                    <IconButton
+                      size="small"
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleCloseFile(file.id);
+                      }}
+                      sx={{ color: 'inherit', p: 0.25 }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </Box>
+                ))}
+              </Box>
+              <Editor width="100%" height="100%" code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
+            </Box>
+            <Terminal height={'100%'} width={showTerminal ? '25%' : '0%'} output={output} />
+          </Box>
+        )}
+
+        {isMobile && (
+          <Box className="" sx={{ height: 'calc(100vh - 60px)', display: 'flex', flexDirection: 'column' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, overflow: 'hidden', bgcolor: '#1f2937', borderBottom: '1px solid rgba(255,255,255,0.12)', overflowX: 'auto' }}>
               {openFiles.map((file) => (
                 <Box
@@ -283,7 +330,7 @@ export default function HomaePage() {
                     display: 'flex',
                     alignItems: 'center',
                     gap: 0.75,
-                    px: 1.25,
+                    px: 1.2,
                     py: 0.75,
                     border: file.id === activeFileId ? '1px solid #60a5fa' : '1px solid transparent',
                     bgcolor: file.id === activeFileId ? '#374151' : '#111827',
@@ -310,167 +357,124 @@ export default function HomaePage() {
                 </Box>
               ))}
             </Box>
-            <Editor width="100%" height="100%" code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
+            <Editor width={'100%'} height={showTerminal ? '80%' : '100%'} code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
+            <Terminal width={'100%'} height={showTerminal ? '20%' : '0%'} output={output} />
           </Box>
-          <Terminal height={'100%'} width={showTerminal ? '25%' : '0%'} output={output} />
-        </Box>
-      )}
+        )}
 
-      {isMobile && (
-        <Box className="" sx={{ height: 'calc(100vh - 60px)', display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, overflow: 'hidden', bgcolor: '#1f2937', borderBottom: '1px solid rgba(255,255,255,0.12)', overflowX: 'auto' }}>
-            {openFiles.map((file) => (
-              <Box
-                key={file.id}
-                component="button"
-                onClick={() => setActiveFileId(file.id)}
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 0.75,
-                  px: 1.2,
-                  py: 0.75,
-                  border: file.id === activeFileId ? '1px solid #60a5fa' : '1px solid transparent',
-                  bgcolor: file.id === activeFileId ? '#374151' : '#111827',
-                  color: 'white',
-                  cursor: 'pointer',
-                  minWidth: 120,
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Typography variant="body2" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {file.name}
-                  {file.isDirty ? ' •' : ''}
-                </Typography>
-                <IconButton
-                  size="small"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    handleCloseFile(file.id);
-                  }}
-                  sx={{ color: 'inherit', p: 0.25 }}
-                >
-                  <CloseIcon fontSize="small" />
-                </IconButton>
-              </Box>
-            ))}
-          </Box>
-          <Editor width={'100%'} height={showTerminal ? '80%' : '100%'} code={code} setCode={handleEditorChange} editorRef={editorRef} theme={theme} fontSize={fontSize} />
-          <Terminal width={'100%'} height={showTerminal ? '20%' : '0%'} output={output} />
-        </Box>
-      )}
-      <Tooltip title="Ask AI" placement="top" arrow>
-        <Fab color="primary" aria-label="ask ai" onClick={() => setShowPromptModal(true)} disabled={isGenerating} sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1300 }}>
-          <AutoAwesomeIcon />
-        </Fab>
-      </Tooltip>
+        <Tooltip title="Ask AI" placement="top" arrow>
+          <Fab color="primary" aria-label="ask ai" onClick={() => setShowPromptModal(true)} disabled={isGenerating} sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1300 }}>
+            <AutoAwesomeIcon />
+          </Fab>
+        </Tooltip>
 
-      <AIChat open={showPromptModal} onClose={() => setShowPromptModal(false)} prompt={aiPrompt} onPromptChange={(event) => setAiPrompt(event.target.value)} onSend={handleGenerateCode} isGenerating={isGenerating} />
+        <AIChat open={showPromptModal} onClose={() => setShowPromptModal(false)} prompt={aiPrompt} onPromptChange={(event) => setAiPrompt(event.target.value)} onSend={handleGenerateCode} isGenerating={isGenerating} />
 
-      <APPModal
-        open={showSaveModal}
-        onClose={() => setShowSaveModal(false)}
-        title="Save Code"
-        actions={
-          <>
-            <APPButton onClick={() => setShowSaveModal(false)} variant="outlined">
-              Cancel
-            </APPButton>
-            <APPButton variant="contained" onClick={saveAsFile}>
-              Download
-            </APPButton>
-            <APPButton variant="contained" onClick={saveToBrowserStorage}>
-              Save
-            </APPButton>
-          </>
-        }
-      >
-        <div style={{ paddingTop: 10 }}>Choose how you want to save your code.</div>
-      </APPModal>
-
-      <APPModal open={showCoffeeModal} onClose={closeCoffeeModal} title="information" maxWidth="xs">
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            pt: 1,
-          }}
+        <APPModal
+          open={showSaveModal}
+          onClose={() => setShowSaveModal(false)}
+          title="Save Code"
+          actions={
+            <>
+              <APPButton onClick={() => setShowSaveModal(false)} variant="outlined">
+                Cancel
+              </APPButton>
+              <APPButton variant="contained" onClick={saveAsFile}>
+                Download
+              </APPButton>
+              <APPButton variant="contained" onClick={saveToBrowserStorage}>
+                Save
+              </APPButton>
+            </>
+          }
         >
-          <Typography variant="body1" sx={{ color: 'white' }}>
-            Author: <strong>Kuldeep Kumar</strong>
-          </Typography>
+          <div style={{ paddingTop: 10 }}>Choose how you want to save your code.</div>
+        </APPModal>
 
-          <Typography variant="body2" sx={{ color: 'white' }}>
-            🌐:
-            <Link href="https://kuldeepinfo.vercel.app" target="_blank" underline="hover">
-              kuldeepinfo.vercel.app
-            </Link>
-          </Typography>
-
-          <Typography variant="body1" sx={{ color: 'white' }}>
-            Email:{' '}
-            <Link href="mailto:kuldeep.navv@gmail.com" underline="hover">
-              kuldeep.navv@gmail.com
-            </Link>
-          </Typography>
-
-          <Typography
-            variant="body1"
-            sx={{
-              fontWeight: 500,
-            }}
-          >
-            If this compiler helped you, buy me a coffee ☕
-          </Typography>
-
+        <APPModal open={showCoffeeModal} onClose={closeCoffeeModal} title="information" maxWidth="xs">
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'center',
+              flexDirection: 'column',
+              gap: 2,
+              pt: 1,
             }}
           >
-            <Card
-              elevation={0}
+            <Typography variant="body1" sx={{ color: 'white' }}>
+              Author: <strong>Kuldeep Kumar</strong>
+            </Typography>
+
+            <Typography variant="body2" sx={{ color: 'white' }}>
+              🌐:
+              <Link href="https://kuldeepinfo.vercel.app" target="_blank" underline="hover">
+                kuldeepinfo.vercel.app
+              </Link>
+            </Typography>
+
+            <Typography variant="body1" sx={{ color: 'white' }}>
+              Email:{' '}
+              <Link href="mailto:kuldeep.navv@gmail.com" underline="hover">
+                kuldeep.navv@gmail.com
+              </Link>
+            </Typography>
+
+            <Typography
+              variant="body1"
               sx={{
-                p: 2,
-                border: '1px solid',
-                borderColor: 'divider',
-                textAlign: 'center',
-                width: 'fit-content',
+                fontWeight: 500,
               }}
             >
-              <CardContent
+              If this compiler helped you, buy me a coffee ☕
+            </Typography>
+
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Card
+                elevation={0}
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  gap: 1.5,
-                  '&:last-child': {
-                    pb: 2,
-                  },
+                  p: 2,
+                  border: '1px solid',
+                  borderColor: 'divider',
+                  textAlign: 'center',
+                  width: 'fit-content',
                 }}
               >
-                <Box
-                  component="img"
-                  src="./upipe-qr.png"
-                  alt="Support QR"
+                <CardContent
                   sx={{
-                    width: 180,
-                    height: 180,
-                    objectFit: 'contain',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    '&:last-child': {
+                      pb: 2,
+                    },
                   }}
-                />
+                >
+                  <Box
+                    component="img"
+                    src="./upipe-qr.png"
+                    alt="Support QR"
+                    sx={{
+                      width: 180,
+                      height: 180,
+                      objectFit: 'contain',
+                    }}
+                  />
 
-                <Typography variant="body2" color="text.secondary">
-                  Scan QR to support ❤️
-                </Typography>
-              </CardContent>
-            </Card>
+                  <Typography variant="body2" color="text.secondary">
+                    Scan QR to support ❤️
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Box>
+            <SocialIcon />
           </Box>
-          <SocialIcon />
-        </Box>
-      </APPModal>
-    </div>
+        </APPModal>
+      </div>
+    </ThemeProvider>
   );
 }
