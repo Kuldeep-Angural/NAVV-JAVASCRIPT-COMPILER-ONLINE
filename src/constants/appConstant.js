@@ -6,3 +6,13 @@ export const INSTAGRAM_LINK = 'https://www.instagram.com/kul_frames?igsh=MWhsYjZ
 export const FACEBOOK_LINK = 'https://www.facebook.com/share/18mtNbHFCj/?mibextid=wwXIfr';
 export const SNAPCHAT_LINK = 'https://snapchat.com/t/GmakICEN';
 export const LINKEDIN_LINK = 'https://www.linkedin.com/in/kuldeep-angural-485a13252?utm_source=share_via&utm_content=profile&utm_medium=member_ios';
+export const STATIC_CODE_SNIPPET = `// Welcome to NavvJS - Online JavaScript Compiler
+// This is a simple JavaScript code snippet to get you started.
+
+function greet(name) {
+  return \`Hello, \${name}!\`;
+}
+
+const userName = 'World';
+console.log(greet(userName)); // Output: Hello, World!
+`;

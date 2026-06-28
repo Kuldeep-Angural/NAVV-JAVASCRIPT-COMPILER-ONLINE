@@ -1,12 +1,13 @@
 import SettingsIcon from '@mui/icons-material/Settings';
 import TerminalIcon from '@mui/icons-material/Terminal';
 import { AppBar, Box, FormControl, IconButton, Menu, MenuItem, Toolbar as MuiToolbar, Select, Tooltip, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { FONT_SIZES, THEMES } from '../constants/appConstant';
-import { format_icon, info_icon, run_icon, save_icon } from '../constants/svgs';
-
-export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTheme, openinfo, setFontSize, fontSize, showTerminal, setShowTerminal }) => {
+import { format_icon, info_icon, open_icon, run_icon, save_icon } from '../constants/svgs';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTheme, openinfo, setFontSize, fontSize, showTerminal, setShowTerminal, handleOpenFiles }) => {
   const [settingsAnchorEl, setSettingsAnchorEl] = useState(null);
+  const fileInputRef = useRef(null);
 
   const handleFontChange = (event) => {
     setFontSize(Number(event.target.value));
@@ -21,6 +22,10 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
   };
 
   const isSettingsOpen = Boolean(settingsAnchorEl);
+
+  const handleOpenClick = () => {
+    fileInputRef.current?.click();
+  };
 
   return (
     <AppBar
@@ -60,6 +65,16 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
 
         {/* Right */}
         <Box display="flex" alignItems="center" gap={1}>
+          <input type="file" accept=".js" multiple ref={fileInputRef} style={{ display: 'none' }} onChange={handleOpenFiles} />
+
+          {/* Open */}
+          <Tooltip title="Open Files">
+            <IconButton color="inherit" onClick={handleOpenClick}>
+              {/* {open_icon} */}
+              <CreateNewFolderIcon />
+            </IconButton>
+          </Tooltip>
+
           {/* Save */}
           <Tooltip title="Save Code">
             <IconButton color="inherit" onClick={handleSave} disabled={!canSave}>
