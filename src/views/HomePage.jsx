@@ -62,8 +62,8 @@ export default function HomaePage() {
     if (value && typeof value === 'object') {
       return Object.prototype.toString.call(value) === '[object Object]'
         ? `{ ${Object.entries(value)
-            .map(([k, v]) => `${k}: ${formatLogValue(v)}`)
-            .join(', ')} }`
+          .map(([k, v]) => `${k}: ${formatLogValue(v)}`)
+          .join(', ')} }`
         : String(value);
     }
 
@@ -76,10 +76,10 @@ export default function HomaePage() {
       prev.map((file) =>
         file.id === activeFileId
           ? {
-              ...file,
-              content: nextValue,
-              isDirty: nextValue !== file.savedContent,
-            }
+            ...file,
+            content: nextValue,
+            isDirty: nextValue !== file.savedContent,
+          }
           : file,
       ),
     );
@@ -129,10 +129,10 @@ export default function HomaePage() {
         prev.map((file) =>
           file.id === activeFileId
             ? {
-                ...file,
-                savedContent: file.content,
-                isDirty: false,
-              }
+              ...file,
+              savedContent: file.content,
+              isDirty: false,
+            }
             : file,
         ),
       );
@@ -144,19 +144,65 @@ export default function HomaePage() {
     setShowSaveModal(false);
   };
 
-  const runCode = () => {
+  // const runCode = () => {
+  //   const logs = [];
+  //   const original = console.log;
+  //   try {
+  //     console.log = (...args) => {
+  //       logs.push(args.map(formatLogValue).join(' '));
+  //     };
+  //     new Function(activeFile?.content ?? '')();
+  //     setOutput(logs.join('\n') || `Executed ${activeFile?.name || 'active file'}`);
+  //   } catch (err) {
+  //     setOutput(`❌ ${err?.message ?? String(err)}`);
+  //   } finally {
+  //     console.log = original;
+  //   }
+  // };
+  const runCode = async () => {
+    setOutput('');
+
     const logs = [];
-    const original = console.log;
+
+    const write = (...args) => {
+      const message = args.map(formatLogValue).join(' ');
+
+      logs.push(message);
+
+      setOutput((prev) =>
+        prev ? `${prev}\n${message}` : message,
+      );
+    };
+
+    const sandboxConsole = {
+      log: write,
+      error: (...args) => write('❌', ...args),
+      warn: (...args) => write('⚠️', ...args),
+      clear: () => {
+        logs.length = 0;
+        setOutput('');
+      },
+    };
+
     try {
-      console.log = (...args) => {
-        logs.push(args.map(formatLogValue).join(' '));
-      };
-      new Function(activeFile?.content ?? '')();
-      setOutput(logs.join('\n') || `Executed ${activeFile?.name || 'active file'}`);
+      const execute = new Function(
+        'console',
+        `
+      return (async () => {
+        ${activeFile?.content || ''}
+      })();
+      `,
+      );
+
+      await execute(sandboxConsole);
+
+      if (logs.length === 0) {
+        setOutput(
+          `Executed ${activeFile?.name || 'active file'}`
+        );
+      }
     } catch (err) {
-      setOutput(`❌ ${err?.message ?? String(err)}`);
-    } finally {
-      console.log = original;
+      setOutput(`❌ ${err?.message || String(err)}`);
     }
   };
 
@@ -193,10 +239,10 @@ export default function HomaePage() {
         prev.map((file) =>
           file.id === activeFileId
             ? {
-                ...file,
-                content: `${file.content}${file.content.trim() ? '\n\n' : ''}${cleanGeneratedCode}`,
-                isDirty: true,
-              }
+              ...file,
+              content: `${file.content}${file.content.trim() ? '\n\n' : ''}${cleanGeneratedCode}`,
+              isDirty: true,
+            }
             : file,
         ),
       );
