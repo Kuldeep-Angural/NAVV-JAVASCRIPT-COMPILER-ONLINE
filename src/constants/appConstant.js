@@ -1,14 +1,13 @@
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import BugReportIcon from '@mui/icons-material/BugReport';
-import DevicesIcon from '@mui/icons-material/Devices';
 import DifferenceIcon from '@mui/icons-material/Difference';
 import HtmlIcon from '@mui/icons-material/Html';
 import JavascriptIcon from '@mui/icons-material/Javascript';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import InsightsIcon from '@mui/icons-material/Insights';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import SecurityIcon from '@mui/icons-material/Security';
 import SpeedIcon from '@mui/icons-material/Speed';
+import DrawIcon from '@mui/icons-material/Draw';
 export const FONT_SIZES = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40];
 export const THEMES = ['vs-dark', 'light', 'hc-black', 'vs', 'hc-light', 'high-contrast'];
 export const STORAGE_KEY = 'source-code';
@@ -50,6 +49,13 @@ export const PRODUCTS_LIST = [
     color: '#4CAF50',
     link: '/jsondiff',
   },
+  {
+    title: 'NotePad',
+    description: 'Create and edit text files with a simple and intuitive interface.',
+    icon: <DrawIcon sx={{ fontSize: 50 }} />,
+    color: '#4CAF50',
+    link: '/notepad',
+  },
 ];
 
 export const FEATURES_LIST = [
@@ -73,11 +79,7 @@ export const FEATURES_LIST = [
     icon: <SpeedIcon color="primary" />,
     desc: 'Instant compilation and live previews for rapid development.',
   },
-  {
-    title: 'Cross Platform',
-    icon: <DevicesIcon color="primary" />,
-    desc: 'Works seamlessly on desktop, tablet and mobile devices.',
-  },
+
   {
     title: 'Secure',
     icon: <SecurityIcon color="primary" />,
@@ -88,9 +90,12 @@ export const FEATURES_LIST = [
     icon: <MenuBookIcon color="primary" />,
     desc: 'Understand complex code instantly with clear, AI-generated explanations.',
   },
-  {
-    title: 'Smart Code Optimization',
-    icon: <InsightsIcon color="primary" />,
-    desc: 'Optimize code for better performance, reduced complexity, and improved efficiency.',
-  },
+];
+
+export const NOTEPAD_LANGUAGES = [
+  { label: 'Plain Text', value: 'plaintext' },
+  { label: 'Markdown', value: 'markdown' },
+  { label: 'HTML', value: 'html' },
+  { label: 'XML', value: 'xml' },
+  { label: 'YAML', value: 'yaml' },
 ];

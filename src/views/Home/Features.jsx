@@ -7,11 +7,7 @@ const Features = () => {
     <Box
       sx={(theme) => ({
         py: { xs: 8, md: 12 },
-        background: `linear-gradient(
-          180deg,
-          ${theme.palette.background.default} 0%,
-          ${theme.palette.primary.main}08 100%
-        )`,
+        background: 'rgba(37, 99, 235, 0.23)',
       })}
     >
       <Container maxWidth="lg">

@@ -86,7 +86,7 @@ export default function APPHeader() {
               <Button
                 variant="contained"
                 component={Link}
-                to="/contact"
+                to="/contact-us"
                 sx={{
                   ml: 1,
                   px: 3,

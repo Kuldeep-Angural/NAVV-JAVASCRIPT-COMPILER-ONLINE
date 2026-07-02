@@ -1,6 +1,44 @@
 import { Box, Card, Container, Grid, Typography } from '@mui/material';
 import { FEATURES_LIST } from '../../constants/appConstant';
+import SpeedIcon from '@mui/icons-material/Speed';
+import PsychologyIcon from '@mui/icons-material/Psychology';
+import SecurityIcon from '@mui/icons-material/Security';
+import CodeIcon from '@mui/icons-material/Code';
+import HubIcon from '@mui/icons-material/Hub';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
+export const WHY_CHOOSE_US_LIST = [
+  {
+    icon: <SpeedIcon />,
+    title: 'Lightning Fast Performance',
+    desc: 'Execute code, compare files, format JSON, and use developer tools instantly with optimized performance and minimal loading times.',
+  },
+  {
+    icon: <PsychologyIcon />,
+    title: 'AI-Powered Assistance',
+    desc: 'Boost productivity with intelligent AI features that help generate, explain, debug, and optimize your code more efficiently.',
+  },
+  {
+    icon: <SecurityIcon />,
+    title: 'Secure & Reliable',
+    desc: 'Your code and data are processed securely using modern technologies with a focus on privacy, stability, and reliability.',
+  },
+  {
+    icon: <CodeIcon />,
+    title: 'All-in-One Developer Toolkit',
+    desc: 'Access compilers, code formatters, JSON tools, diff checkers, regex testers, encoders, and many more utilities in one platform.',
+  },
+  {
+    icon: <HubIcon />,
+    title: 'Built for Every Developer',
+    desc: 'Whether you are a student, freelancer, or professional engineer, CompileFusion helps simplify your daily development workflow.',
+  },
+  {
+    icon: <RocketLaunchIcon />,
+    title: 'Continuous Innovation',
+    desc: 'We continuously add new AI capabilities, developer tools, and performance improvements based on community feedback.',
+  },
+];
 const WhyCodeFusion = () => {
   return (
     <Box
@@ -62,7 +100,7 @@ const WhyCodeFusion = () => {
         {/* Feature Cards */}
 
         <Grid container spacing={4}>
-          {FEATURES_LIST.map((item) => (
+          {WHY_CHOOSE_US_LIST.map((item) => (
             <Grid key={item.title} size={{ xs: 12, sm: 6, md: 4 }}>
               <Card
                 elevation={0}
