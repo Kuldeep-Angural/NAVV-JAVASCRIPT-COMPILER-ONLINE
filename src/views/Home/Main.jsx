@@ -2,7 +2,7 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import TerminalRoundedIcon from '@mui/icons-material/TerminalRounded';
-import { Box, Button, Chip, Container, Divider, Grid, Paper, Stack, Typography } from '@mui/material';
+import { Box, Button, Chip, Container, Grid, Stack, Typography } from '@mui/material';
 
 const FEATURES = ['JavaScript Compiler', 'Live HTML Preview', 'Smart JSON Diff', 'AI Code Generator', 'Runtime Error Fixing', 'Performance Optimization'];
 
@@ -84,6 +84,7 @@ export const Main = () => {
               spacing={2}
               sx={{
                 mt: 5,
+                mb: 5,
               }}
             >
               {FEATURES.map((feature) => (
@@ -123,45 +124,20 @@ export const Main = () => {
                 Explore Products
               </Button>
             </Stack>
-
-            {/* Stats */}
-
-            <Stack
-              direction="row"
-              spacing={4}
-              flexWrap="wrap"
-              mt={6}
-              divider={
-                <Divider
-                  orientation="vertical"
-                  flexItem
-                  sx={{
-                    borderColor: 'rgba(255,255,255,.1)',
-                  }}
-                />
-              }
-            ></Stack>
           </Grid>
 
-          {/* Right */}
-
           <Grid size={{ xs: 12, md: 5 }}>
-            <Paper
-              elevation={0}
+            <Box
               sx={{
                 overflow: 'hidden',
-                bgcolor: 'rgb(255, 255, 255)',
                 backdropFilter: 'blur(20px)',
                 border: '1px solid rgba(255,255,255,.08)',
               }}
             >
-              {/* Window Header */}
-
               <Box
                 sx={{
                   px: 3,
                   py: 2,
-                  borderBottom: '1px solid rgba(255,255,255,.08)',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
@@ -171,60 +147,10 @@ export const Main = () => {
                   <TerminalRoundedIcon color="primary" />
                   <Typography fontWeight={700}>CompileFusion Workspace</Typography>
                 </Stack>
-
                 <Chip label="Online" color="success" size="small" />
               </Box>
-
-              <Box p={4}>
-                <Typography variant="subtitle2" color="grey.500">
-                  AVAILABLE TOOLS
-                </Typography>
-
-                <Stack spacing={2} mt={3}>
-                  {['JavaScript Compiler', 'HTML Preview', 'JSON Diff', 'AI Code Assistant'].map((tool) => (
-                    <Stack key={tool} direction="row" spacing={2} alignItems="center">
-                      <CheckCircleRoundedIcon color="primary" fontSize="small" />
-
-                      <Typography>{tool}</Typography>
-                    </Stack>
-                  ))}
-                </Stack>
-
-                <Divider
-                  sx={{
-                    my: 4,
-                    borderColor: 'rgba(255,255,255,.08)',
-                  }}
-                />
-
-                <Typography variant="subtitle2" color="grey.500">
-                  AI TASK
-                </Typography>
-
-                <Paper
-                  sx={{
-                    mt: 2,
-                    p: 3,
-                    bgcolor: 'rgba(255,255,255,.04)',
-                    borderRadius: 3,
-                  }}
-                >
-                  <Typography fontFamily="monospace" color="primary.main">
-                    &gt; Generate Express Authentication API
-                  </Typography>
-
-                  <Stack spacing={1.5} mt={3}>
-                    <Typography color="success.main">✓ API Generated</Typography>
-
-                    <Typography color="success.main">✓ Documentation Added</Typography>
-
-                    <Typography color="success.main">✓ Unit Tests Created</Typography>
-
-                    <Typography color="success.main">✓ Ready to Run</Typography>
-                  </Stack>
-                </Paper>
-              </Box>
-            </Paper>
+              <img src="/image.png" alt="Workspace" style={{ width: '100%' }} />
+            </Box>
           </Grid>
         </Grid>
       </Container>

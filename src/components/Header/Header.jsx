@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import CodeIcon from '@mui/icons-material/Code';
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { AppBar, Box, Button, Container, Drawer, IconButton, List, ListItemButton, ListItemText, Stack, Toolbar, Typography } from '@mui/material';
@@ -28,7 +27,7 @@ export default function APPHeader() {
         position="sticky"
         elevation={0}
         sx={(theme) => ({
-          background: 'rgba(15,23,42,0.85)',
+          background: 'rgba(255, 255, 255, 0.85)',
           backdropFilter: 'blur(18px)',
           borderBottom: `1px solid ${theme.palette.divider}`,
         })}
@@ -48,22 +47,7 @@ export default function APPHeader() {
                 color: 'inherit',
               }}
             >
-              <CodeIcon
-                color="primary"
-                sx={{
-                  fontSize: 34,
-                }}
-              />
-
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 800,
-                  letterSpacing: 0.5,
-                }}
-              >
-                CompileFusion
-              </Typography>
+              <img src="/logo.png" alt="Logo" style={{ width: 120, height: 60 }} />
             </Box>
 
             {/* Desktop Navigation */}
@@ -82,7 +66,7 @@ export default function APPHeader() {
                 <Button
                   key={item.title}
                   href={item.href}
-                  color="inherit"
+                  color="primary"
                   sx={{
                     px: 2,
                     py: 1,

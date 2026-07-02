@@ -1,3 +1,5 @@
+import SpinnerService from './SpinnerService';
+
 const getApiKey = () => process.env.REACT_APP_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
 function removeCodeFence(text) {
   return text.replace(/^```(?:javascript|js)?\n?/, '').replace(/\n?```$/, '');
@@ -21,6 +23,7 @@ const AIService = {
     }
 
     try {
+      SpinnerService.show();
       const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -66,6 +69,8 @@ Rules:
     } catch (error) {
       console.error('Error in AIService:', error);
       throw error;
+    } finally {
+      SpinnerService.hide();
     }
   },
 };

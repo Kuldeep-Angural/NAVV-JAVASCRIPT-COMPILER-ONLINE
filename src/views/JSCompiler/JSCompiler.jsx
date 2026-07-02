@@ -1,5 +1,6 @@
 /* eslint-disable no-new-func */
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import AdbIcon from '@mui/icons-material/Adb';
 import CloseIcon from '@mui/icons-material/Close';
 import { Box, Card, CardContent, Fab, IconButton, Link, ThemeProvider, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -63,8 +64,8 @@ export default function JSCompiler() {
     if (value && typeof value === 'object') {
       return Object.prototype.toString.call(value) === '[object Object]'
         ? `{ ${Object.entries(value)
-          .map(([k, v]) => `${k}: ${formatLogValue(v)}`)
-          .join(', ')} }`
+            .map(([k, v]) => `${k}: ${formatLogValue(v)}`)
+            .join(', ')} }`
         : String(value);
     }
 
@@ -77,10 +78,10 @@ export default function JSCompiler() {
       prev.map((file) =>
         file.id === activeFileId
           ? {
-            ...file,
-            content: nextValue,
-            isDirty: nextValue !== file.savedContent,
-          }
+              ...file,
+              content: nextValue,
+              isDirty: nextValue !== file.savedContent,
+            }
           : file,
       ),
     );
@@ -130,10 +131,10 @@ export default function JSCompiler() {
         prev.map((file) =>
           file.id === activeFileId
             ? {
-              ...file,
-              savedContent: file.content,
-              isDirty: false,
-            }
+                ...file,
+                savedContent: file.content,
+                isDirty: false,
+              }
             : file,
         ),
       );
@@ -170,9 +171,7 @@ export default function JSCompiler() {
 
       logs.push(message);
 
-      setOutput((prev) =>
-        prev ? `${prev}\n${message}` : message,
-      );
+      setOutput((prev) => (prev ? `${prev}\n${message}` : message));
     };
 
     const sandboxConsole = {
@@ -198,14 +197,18 @@ export default function JSCompiler() {
       await execute(sandboxConsole);
 
       if (logs.length === 0) {
-        setOutput(
-          `Executed ${activeFile?.name || 'active file'}`
-        );
+        setOutput(`Executed ${activeFile?.name || 'active file'}`);
       }
     } catch (err) {
       setOutput(`❌ ${err?.message || String(err)}`);
     }
   };
+
+  const cleanGeneratedCode = (generatedCode) =>
+    generatedCode
+      ?.replace(/^```(?:js|javascript)?\s*/i, '')
+      .replace(/```\s*$/i, '')
+      .trim() ?? '';
 
   const handleGenerateCode = useCallback(async () => {
     if (!activeFileId) {
@@ -231,19 +234,20 @@ export default function JSCompiler() {
         throw new Error('The AI service did not return any code.');
       }
 
-      const cleanGeneratedCode = generatedCode
-        .replace(/^```(?:js|javascript)?\s*/i, '')
-        .replace(/```\s*$/i, '')
-        .trim();
+      const nextCode = cleanGeneratedCode(generatedCode);
+
+      if (!nextCode) {
+        throw new Error('The AI service returned empty code.');
+      }
 
       setOpenFiles((prev) =>
         prev.map((file) =>
           file.id === activeFileId
             ? {
-              ...file,
-              content: `${file.content}${file.content.trim() ? '\n\n' : ''}${cleanGeneratedCode}`,
-              isDirty: true,
-            }
+                ...file,
+                content: `${file.content}${file.content.trim() ? '\n\n' : ''}${nextCode}`,
+                isDirty: true,
+              }
             : file,
         ),
       );
@@ -313,6 +317,55 @@ export default function JSCompiler() {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleSave]);
+
+  const handleCodeDebug = useCallback(async () => {
+    if (!activeFileId) {
+      return;
+    }
+
+    const currentCode = activeFile?.content?.trim();
+
+    if (!currentCode) {
+      setOutput('❌ Nothing to debug yet. Add some JavaScript first.');
+      return;
+    }
+
+    setIsGenerating(true);
+    setOutput('Debugging your code and fixing issues...');
+
+    try {
+      const instruction = `You are debugging the active JavaScript file. The current file content is:\n\n${currentCode}\n\nPlease:\n- Find syntax errors, runtime issues, and logic bugs.\n- Fix them while preserving the intended behavior.\n- Return only the corrected JavaScript code.\n- Keep the code valid and runnable.`;
+      const response = await AIService.chat(instruction, 'JavaScript');
+      const generatedCode = response?.content?.trim();
+
+      if (!generatedCode) {
+        throw new Error('The AI service did not return any code.');
+      }
+
+      const nextCode = cleanGeneratedCode(generatedCode);
+
+      if (!nextCode) {
+        throw new Error('The AI service returned empty code.');
+      }
+
+      setOpenFiles((prev) =>
+        prev.map((file) =>
+          file.id === activeFileId
+            ? {
+                ...file,
+                content: nextCode,
+                isDirty: true,
+              }
+            : file,
+        ),
+      );
+      setOutput('✅ Debugging complete. The file has been updated with fixes.');
+    } catch (err) {
+      setOutput(`❌ ${err?.message ?? String(err)}`);
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [activeFileId, activeFile?.content]);
 
   return (
     <ThemeProvider theme={JSCompilerTheme}>
@@ -408,8 +461,14 @@ export default function JSCompiler() {
           </Box>
         )}
 
+        <Tooltip title="Debug Code" placement="top" arrow>
+          <Fab size="small" color="primary" aria-label="Debug Code" onClick={handleCodeDebug} disabled={isGenerating} sx={{ position: 'fixed', bottom: 70, right: 24, zIndex: 1300 }}>
+            <AdbIcon />
+          </Fab>
+        </Tooltip>
+
         <Tooltip title="Ask AI" placement="top" arrow>
-          <Fab color="primary" aria-label="ask ai" onClick={() => setShowPromptModal(true)} disabled={isGenerating} sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1300 }}>
+          <Fab color="primary" size="small" aria-label="ask ai" onClick={() => setShowPromptModal(true)} disabled={isGenerating} sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 1300 }}>
             <AutoAwesomeIcon />
           </Fab>
         </Tooltip>

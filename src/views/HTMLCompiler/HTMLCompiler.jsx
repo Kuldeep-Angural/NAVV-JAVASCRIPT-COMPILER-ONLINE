@@ -139,7 +139,7 @@ const HTMLCompiler = () => {
 
   return (
     <ThemeProvider theme={JSCompilerTheme}>
-      <Box sx={{ minHeight: '100vh', bgcolor: '#0b1121', color: 'white' }}>
+      <div className="app">
         <HtmlToolbar onRun={buildPreview} onFormat={handleFormat} openinfo={openCoffeeModal} onDownload={handleDownload} showPreview={showPreview} setShowPreview={setShowPreview} theme={editorTheme} setTheme={setEditorTheme} fontSize={fontSize} setFontSize={setFontSize} activeFileLabel={FILES[activeTab].name} />
 
         <Box
@@ -228,7 +228,8 @@ const HTMLCompiler = () => {
             </Box>
           )}
         </Box>
-      </Box>
+      </div>
+
       <APPModal open={showCoffeeModal} onClose={closeCoffeeModal} title="information" maxWidth="xs">
         <Box
           sx={{

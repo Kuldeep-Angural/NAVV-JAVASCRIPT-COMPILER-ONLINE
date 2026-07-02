@@ -6,7 +6,7 @@ import MessageBubble from './MessageBubble';
 import PromptInput from './PromptInput';
 import { chatPanelStyles } from './styles';
 
-const AIChat = ({ open, onClose, prompt, onPromptChange, onSend, isGenerating, title = 'Ask AI', placeholder = 'Describe what you want to do with the active file' }) => {
+const AIChat = ({ open, onClose, prompt, onPromptChange, onSend, isGenerating, title = 'Ask AI', text = 'I can generate, update, or refactor the active JavaScript file for you.', placeholder = 'Describe what you want to do with the active file' }) => {
   const [messages, setMessages] = useState([]);
 
   if (!open) {
@@ -45,7 +45,7 @@ const AIChat = ({ open, onClose, prompt, onPromptChange, onSend, isGenerating, t
       </Box>
 
       <Box sx={chatPanelStyles.body}>
-        <MessageBubble role="assistant" text="I can generate, update, or refactor the active JavaScript file for you." />
+        <MessageBubble role="assistant" text={text} />
 
         {messages.map((message, index) => (
           <MessageBubble key={index} role={message.role} text={message.text} />

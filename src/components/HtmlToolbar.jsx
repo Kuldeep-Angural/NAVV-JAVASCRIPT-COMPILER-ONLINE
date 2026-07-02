@@ -1,4 +1,3 @@
-import CodeIcon from '@mui/icons-material/Code';
 import DownloadIcon from '@mui/icons-material/Download';
 import SettingsIcon from '@mui/icons-material/Settings';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -25,9 +24,9 @@ const HtmlToolbar = ({ onRun, onFormat, onDownload, showPreview, setShowPreview,
   return (
     <AppBar
       position="static"
-      elevation={1}
+      elevation={0}
       sx={{
-        bgcolor: '#57698f',
+        background: 'rgba(255, 255, 255, 0.85)',
         borderBottom: '1px solid',
         borderColor: 'divider',
         height: '60px',
@@ -48,29 +47,14 @@ const HtmlToolbar = ({ onRun, onFormat, onDownload, showPreview, setShowPreview,
               color: 'inherit',
             }}
           >
-            <CodeIcon
-              color="primary"
-              sx={{
-                fontSize: 34,
-              }}
-            />
-
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 800,
-                letterSpacing: 0.5,
-              }}
-            >
-              CompileFusion
-            </Typography>
+            <img src="/logo.png" alt="Logo" style={{ width: 120, height: 60 }} />
           </Box>
         </Box>
 
         <Box display="flex" alignItems="center" gap={1}>
           <Tooltip title="Settings">
             <IconButton color="inherit" onClick={handleOpenSettings} aria-controls={isSettingsOpen ? 'settings-menu' : undefined} aria-haspopup="true" aria-expanded={isSettingsOpen ? 'true' : undefined}>
-              <SettingsIcon sx={{ color: isSettingsOpen ? '#4caf50' : 'white' }} />
+              <SettingsIcon color={isSettingsOpen ? 'primary' : 'secondary'} />
             </IconButton>
           </Tooltip>
 
@@ -179,39 +163,31 @@ const HtmlToolbar = ({ onRun, onFormat, onDownload, showPreview, setShowPreview,
           </Menu>
           {/* Run  */}
           <Tooltip title="Run Code">
-            <IconButton color="inherit" onClick={onRun}>
+            <IconButton color="secondary" onClick={onRun}>
               {run_icon}
             </IconButton>
           </Tooltip>
 
           {/* Format */}
           <Tooltip title="Format Code">
-            <IconButton color="inherit" onClick={onFormat}>
+            <IconButton color="secondary" onClick={onFormat}>
               {format_icon}
             </IconButton>
           </Tooltip>
 
           <Tooltip title={previewLabel}>
-            <IconButton color="inherit" onClick={() => setShowPreview((prev) => !prev)}>
-              {showPreview ? (
-                <VisibilityOffIcon
-                  style={{
-                    color: '#4caf50',
-                  }}
-                />
-              ) : (
-                <VisibilityIcon />
-              )}
+            <IconButton color="secondary" onClick={() => setShowPreview((prev) => !prev)}>
+              {showPreview ? <VisibilityOffIcon color="primary" /> : <VisibilityIcon />}
             </IconButton>
           </Tooltip>
 
-          <IconButton color="inherit" onClick={onDownload}>
+          <IconButton color="secondary" onClick={onDownload}>
             <DownloadIcon />
           </IconButton>
 
           {/* Info */}
           <Tooltip title="Information">
-            <IconButton color="inherit" onClick={openinfo}>
+            <IconButton color="secondary" onClick={openinfo}>
               {info_icon}
             </IconButton>
           </Tooltip>
