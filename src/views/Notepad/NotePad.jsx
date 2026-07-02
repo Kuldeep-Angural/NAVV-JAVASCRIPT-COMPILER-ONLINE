@@ -1,10 +1,9 @@
 import { Box, Card, CardContent, Link, ThemeProvider, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import APPModal from '../../components/APPModal';
 import NotePadToolbar from '../../components/NotePadToolbar';
 import SocialIcon from '../../components/SocialIcon';
 import JSCompilerTheme from '../../theme/theme';
-import { Editor } from '../../components/Editor';
 import NotePadEditor from './NotePadEditor';
 
 const NotePad = () => {
@@ -22,8 +21,15 @@ const NotePad = () => {
   };
 
   const handleSave = () => {
-    const content = localStorage.setItem('notepadContent', content);
+    localStorage.setItem('notepadContent', content);
   };
+
+  useEffect(() => {
+    const savedContent = localStorage.getItem('notepadContent');
+    if (savedContent) {
+      setContent(savedContent);
+    }
+  }, []);
 
   const handleDownload = () => {
     const content = localStorage.getItem('notepadContent');

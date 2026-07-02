@@ -1,12 +1,10 @@
-import { Box, Card, Container, Grid, Typography } from '@mui/material';
-import { FEATURES_LIST } from '../../constants/appConstant';
-import SpeedIcon from '@mui/icons-material/Speed';
-import PsychologyIcon from '@mui/icons-material/Psychology';
-import SecurityIcon from '@mui/icons-material/Security';
 import CodeIcon from '@mui/icons-material/Code';
 import HubIcon from '@mui/icons-material/Hub';
+import PsychologyIcon from '@mui/icons-material/Psychology';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-
+import SecurityIcon from '@mui/icons-material/Security';
+import SpeedIcon from '@mui/icons-material/Speed';
+import { Box, Card, Container, Grid, Typography } from '@mui/material';
 export const WHY_CHOOSE_US_LIST = [
   {
     icon: <SpeedIcon />,

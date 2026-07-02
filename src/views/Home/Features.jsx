@@ -5,10 +5,10 @@ import { FEATURES_LIST } from '../../constants/appConstant';
 const Features = () => {
   return (
     <Box
-      sx={(theme) => ({
+      sx={{
         py: { xs: 8, md: 12 },
         background: 'rgba(37, 99, 235, 0.23)',
-      })}
+      }}
     >
       <Container maxWidth="lg">
         {/* Header */}
