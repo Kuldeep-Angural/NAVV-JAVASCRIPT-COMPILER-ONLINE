@@ -1,14 +1,22 @@
-// components/Header/Header.jsx
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { AppBar, Box, Button, Container, Drawer, IconButton, List, ListItemButton, ListItemText, Stack, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Stack, Toolbar } from '@mui/material';
 
 export default function APPHeader() {
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const menuItems = [
     {
@@ -65,7 +73,8 @@ export default function APPHeader() {
               {menuItems.map((item) => (
                 <Button
                   key={item.title}
-                  href={item.href}
+                  component={Link}
+                  to={item.href}
                   color="primary"
                   sx={{
                     px: 2,
@@ -104,10 +113,9 @@ export default function APPHeader() {
               </Button>
             </Stack>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Button */}
             <IconButton
-              onClick={() => setOpen(true)}
-              color="inherit"
+              onClick={handleOpen}
               sx={{
                 display: {
                   xs: 'flex',
@@ -115,73 +123,49 @@ export default function APPHeader() {
                 },
               }}
             >
-              <MenuIcon />
+              <MenuIcon color="primary" />
             </IconButton>
           </Toolbar>
         </Container>
       </AppBar>
 
-      {/* Mobile Drawer */}
-      <Drawer
-        anchor="right"
+      {/* Mobile Menu */}
+      <Menu
+        anchorEl={anchorEl}
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
         PaperProps={{
           sx: {
-            width: 280,
-            p: 2,
+            width: 240,
+            mt: 1,
+            borderRadius: 2,
+            p: 1,
           },
         }}
       >
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 800,
-            mb: 3,
-          }}
-        >
-          CompileFusion
-        </Typography>
-
-        <List disablePadding>
-          {menuItems.map((item) => (
-            <ListItemButton
-              key={item.title}
-              component="a"
-              href={item.href}
-              onClick={() => setOpen(false)}
-              sx={{
-                borderRadius: 2,
-                mb: 0.5,
-              }}
-            >
-              <ListItemText
-                primary={item.title}
-                primaryTypographyProps={{
-                  fontWeight: 600,
-                }}
-              />
-            </ListItemButton>
-          ))}
-        </List>
-
-        <Button
-          component={Link}
-          to="/contact-us"
-          variant="contained"
-          fullWidth
-          onClick={() => setOpen(false)}
-          sx={{
-            mt: 3,
-            py: 1.3,
-            borderRadius: 2,
-            textTransform: 'none',
-            fontWeight: 700,
-          }}
-        >
-          Contact Us
-        </Button>
-      </Drawer>
+        {[...menuItems, { title: 'Contact Us', href: '/contact-us' }].map((item) => (
+          <MenuItem
+            key={item.title}
+            component={Link}
+            to={item.href}
+            onClick={handleClose}
+            sx={{
+              borderRadius: 1.5,
+              fontWeight: 600,
+            }}
+          >
+            {item.title}
+          </MenuItem>
+        ))}
+      </Menu>
     </>
   );
 }

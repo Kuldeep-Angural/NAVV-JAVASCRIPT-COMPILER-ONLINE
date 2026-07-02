@@ -1,14 +1,14 @@
-import { Box, Button, Card, CardContent, Container, Divider, Grid, Link, Stack, TextField, ThemeProvider, Typography } from '@mui/material';
+import BugReportIcon from '@mui/icons-material/BugReport';
 import EmailIcon from '@mui/icons-material/Email';
 import LanguageIcon from '@mui/icons-material/Language';
-import BugReportIcon from '@mui/icons-material/BugReport';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import SendIcon from '@mui/icons-material/Send';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import { Box, Button, Card, CardContent, Container, Divider, Grid, Link, Stack, TextField, ThemeProvider, Typography } from '@mui/material';
+import { useState } from 'react';
 import Footer from '../../components/Footer/Footer';
 import APPHeader from '../../components/Header/Header';
 import HomeTheme from '../../theme/HomeTheme';
-import { useState } from 'react';
 
 const ContactUs = () => {
   const [name, setName] = useState('');
@@ -35,7 +35,7 @@ ${messageText}
     <>
       <APPHeader />
       <ThemeProvider theme={HomeTheme}>
-        <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Container maxWidth="lg" sx={{ py: 2 }}>
           {/* Hero */}
 
           <Box textAlign="center" mb={8}>
@@ -149,10 +149,6 @@ ${messageText}
               </Card>
             </Grid>
           </Grid>
-
-          <Divider sx={{ my: 8 }} />
-
-          {/* Footer */}
         </Container>
         <Footer />
       </ThemeProvider>

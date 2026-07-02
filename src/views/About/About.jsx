@@ -1,11 +1,10 @@
-import { Avatar, Box, Button, Chip, Container, Divider, Grid, Link, Paper, Stack, ThemeProvider, Typography } from '@mui/material';
-import CodeIcon from '@mui/icons-material/Code';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import CodeIcon from '@mui/icons-material/Code';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import PersonIcon from '@mui/icons-material/Person';
+import { Box, Button, Chip, Container, Divider, Grid, Link, Paper, Stack, ThemeProvider, Typography } from '@mui/material';
+import Footer from '../../components/Footer/Footer';
 import APPHeader from '../../components/Header/Header';
 import HomeTheme from '../../theme/HomeTheme';
-import Footer from '../../components/Footer/Footer';
 
 const features = ['JavaScript Compiler', 'HTML Previewer', 'JSON Diff', 'AI Code Generator', 'AI Bug Fixes', 'Code Refactoring', 'AI Code Explanation', 'Performance Optimization'];
 
@@ -14,7 +13,7 @@ const About = () => {
     <>
       <APPHeader />
       <ThemeProvider theme={HomeTheme}>
-        <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Container maxWidth="lg" sx={{ py: 2 }}>
           {/* Hero */}
           <Box textAlign="center" mb={8}>
             <Typography variant="overline" color="primary" sx={{ letterSpacing: 2 }}>
@@ -75,11 +74,11 @@ const About = () => {
             A growing collection of tools designed for productivity.
           </Typography>
 
-          <Stack direction="row" flexWrap="wrap" justifyContent="center" gap={2} mb={8}>
+          <Box overflow="scroll" width="100%" maxWidth={800} display="flex" gap={1.5} spacing={1.5} flexWrap="wrap" justifyContent="center">
             {features.map((feature) => (
               <Chip key={feature} icon={<CodeIcon />} label={feature} color="primary" variant="outlined" />
             ))}
-          </Stack>
+          </Box>
 
           <Divider sx={{ mb: 8 }} />
 
@@ -88,17 +87,7 @@ const About = () => {
           <Paper sx={{ p: 5 }}>
             <Grid container spacing={4} alignItems="center">
               <Grid size={{ xs: 12, md: 3 }} textAlign="center">
-                <Avatar
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    mx: 'auto',
-                    bgcolor: 'primary.main',
-                    fontSize: 42,
-                  }}
-                >
-                  <PersonIcon fontSize="large" />
-                </Avatar>
+                <img src="/kuldeep.png" alt="Kuldeep Kumar" style={{ width: '100%', height: '100%', borderRadius: '50%' }} />
               </Grid>
 
               <Grid size={{ xs: 12, md: 9 }}>
@@ -123,7 +112,7 @@ const About = () => {
                     Portfolio
                   </Button>
 
-                  <Button component={Link} href="mailto:kuldeep.navv@gmail.com" variant="outlined">
+                  <Button component={Link} href={'/contact-us'} target="_blank" variant="outlined">
                     Contact
                   </Button>
                 </Stack>
