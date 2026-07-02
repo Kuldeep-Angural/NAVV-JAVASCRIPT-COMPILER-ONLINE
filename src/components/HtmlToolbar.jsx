@@ -1,33 +1,26 @@
 import CodeIcon from '@mui/icons-material/Code';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
+import DownloadIcon from '@mui/icons-material/Download';
 import SettingsIcon from '@mui/icons-material/Settings';
-import TerminalIcon from '@mui/icons-material/Terminal';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { AppBar, Box, FormControl, IconButton, Link, Menu, MenuItem, Toolbar as MuiToolbar, Select, Tooltip, Typography } from '@mui/material';
-import { useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { FONT_SIZES, THEMES } from '../constants/appConstant';
-import { format_icon, info_icon, run_icon, save_icon } from '../constants/svgs';
+import { format_icon, info_icon, run_icon } from '../constants/svgs';
 
-export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTheme, openinfo, setFontSize, fontSize, showTerminal, setShowTerminal, handleOpenFiles }) => {
+const HtmlToolbar = ({ onRun, onFormat, onDownload, showPreview, setShowPreview, theme, setTheme, fontSize, setFontSize, openinfo }) => {
   const [settingsAnchorEl, setSettingsAnchorEl] = useState(null);
-  const fileInputRef = useRef(null);
+  const isSettingsOpen = Boolean(settingsAnchorEl);
 
-  const handleFontChange = (event) => {
-    setFontSize(Number(event.target.value));
-  };
-
-  const openSettingsMenu = (event) => {
+  const handleOpenSettings = (event) => {
     setSettingsAnchorEl(event.currentTarget);
   };
 
-  const closeSettingsMenu = () => {
+  const handleCloseSettings = () => {
     setSettingsAnchorEl(null);
   };
 
-  const isSettingsOpen = Boolean(settingsAnchorEl);
-
-  const handleOpenClick = () => {
-    fileInputRef.current?.click();
-  };
+  const previewLabel = useMemo(() => (showPreview ? 'Hide preview' : 'Show preview'), [showPreview]);
 
   return (
     <AppBar
@@ -40,7 +33,7 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
         height: '60px',
       }}
     >
-      <MuiToolbar sx={{ justifyContent: 'space-between' }}>
+      <MuiToolbar sx={{ justifyContent: 'space-between', minHeight: 60, px: 2 }}>
         {/* Left */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} gap={2}>
           <Box
@@ -74,39 +67,25 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
           </Box>
         </Box>
 
-        {/* Right */}
         <Box display="flex" alignItems="center" gap={1}>
-          <input type="file" accept=".js" multiple ref={fileInputRef} style={{ display: 'none' }} onChange={handleOpenFiles} />
-
-          {/* Open */}
-          <Tooltip title="Open Files">
-            <IconButton color="inherit" onClick={handleOpenClick}>
-              {/* {open_icon} */}
-              <CreateNewFolderIcon />
-            </IconButton>
-          </Tooltip>
-
-          {/* Save */}
-          <Tooltip title="Save Code">
-            <IconButton color="inherit" onClick={handleSave} disabled={!canSave}>
-              {save_icon}
-            </IconButton>
-          </Tooltip>
-
-          {/* Settings */}
           <Tooltip title="Settings">
-            <IconButton color="inherit" onClick={openSettingsMenu} aria-controls={isSettingsOpen ? 'settings-menu' : undefined} aria-haspopup="true" aria-expanded={isSettingsOpen ? 'true' : undefined}>
+            <IconButton color="inherit" onClick={handleOpenSettings} aria-controls={isSettingsOpen ? 'settings-menu' : undefined} aria-haspopup="true" aria-expanded={isSettingsOpen ? 'true' : undefined}>
               <SettingsIcon sx={{ color: isSettingsOpen ? '#4caf50' : 'white' }} />
             </IconButton>
           </Tooltip>
 
           <Menu
-            id="settings-menu"
             anchorEl={settingsAnchorEl}
             open={isSettingsOpen}
-            onClose={closeSettingsMenu}
-            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            onClose={handleCloseSettings}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
             PaperProps={{
               sx: {
                 mt: 1,
@@ -120,15 +99,30 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
               },
             }}
           >
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, padding: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 1.5,
+                p: 2,
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 2,
+                }}
+              >
                 <Typography variant="body2" sx={{ color: '#d1d5db' }}>
                   Font Size
                 </Typography>
+
                 <FormControl size="small" sx={{ minWidth: 90 }}>
                   <Select
                     value={fontSize}
-                    onChange={handleFontChange}
+                    onChange={(event) => setFontSize(Number(event.target.value))}
                     sx={{
                       color: 'white',
                       '.MuiOutlinedInput-notchedOutline': {
@@ -139,7 +133,7 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
                       },
                     }}
                   >
-                    {FONT_SIZES.map((size) => (
+                    {FONT_SIZES.slice(0, 10).map((size) => (
                       <MenuItem key={size} value={size}>
                         {size}
                       </MenuItem>
@@ -147,15 +141,22 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
                   </Select>
                 </FormControl>
               </Box>
-
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2 }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 2,
+                }}
+              >
                 <Typography variant="body2" sx={{ color: '#d1d5db' }}>
                   Theme
                 </Typography>
-                <FormControl size="small" sx={{ minWidth: 110 }}>
+
+                <FormControl size="small" sx={{ minWidth: 120 }}>
                   <Select
                     value={theme}
-                    onChange={(e) => setTheme(e.target.value)}
+                    onChange={(event) => setTheme(event.target.value)}
                     sx={{
                       color: 'white',
                       '.MuiOutlinedInput-notchedOutline': {
@@ -176,30 +177,36 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
               </Box>
             </Box>
           </Menu>
-
-          {/* Format */}
-          <Tooltip title="Format Code">
-            <IconButton color="inherit" onClick={formatCode}>
-              {format_icon}
-            </IconButton>
-          </Tooltip>
-
-          {/* Save */}
-
-          {/* Run */}
+          {/* Run  */}
           <Tooltip title="Run Code">
-            <IconButton color="inherit" onClick={runCode}>
+            <IconButton color="inherit" onClick={onRun}>
               {run_icon}
             </IconButton>
           </Tooltip>
 
-          <IconButton size="small" onClick={() => setShowTerminal(!showTerminal)}>
-            {/* 🔥 active line indicator */}
-            <TerminalIcon
-              style={{
-                color: showTerminal ? '#4caf50' : 'white',
-              }}
-            />
+          {/* Format */}
+          <Tooltip title="Format Code">
+            <IconButton color="inherit" onClick={onFormat}>
+              {format_icon}
+            </IconButton>
+          </Tooltip>
+
+          <Tooltip title={previewLabel}>
+            <IconButton color="inherit" onClick={() => setShowPreview((prev) => !prev)}>
+              {showPreview ? (
+                <VisibilityOffIcon
+                  style={{
+                    color: '#4caf50',
+                  }}
+                />
+              ) : (
+                <VisibilityIcon />
+              )}
+            </IconButton>
+          </Tooltip>
+
+          <IconButton color="inherit" onClick={onDownload}>
+            <DownloadIcon />
           </IconButton>
 
           {/* Info */}
@@ -213,3 +220,5 @@ export const Toolbar = ({ runCode, formatCode, handleSave, canSave, theme, setTh
     </AppBar>
   );
 };
+
+export default HtmlToolbar;

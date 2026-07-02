@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import MonacoEditor from '@monaco-editor/react';
 
-export const Editor = ({ code, setCode, editorRef, theme, fontSize = 16, width = '75%', height }) => {
+export const Editor = ({ code, language = 'javascript', setCode, editorRef, theme, fontSize = 16, width = '75%', height }) => {
   return (
     <Box
       sx={{
@@ -12,7 +12,7 @@ export const Editor = ({ code, setCode, editorRef, theme, fontSize = 16, width =
     >
       <MonacoEditor
         height="100%"
-        language="javascript"
+        language={language}
         value={code}
         theme={theme}
         onMount={(editor) => {

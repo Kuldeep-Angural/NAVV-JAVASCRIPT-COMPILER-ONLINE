@@ -1,27 +1,33 @@
 {
-  "short_name": "NavvJS",
-  "name": "NavvJS Online JavaScript Compiler",
-  "description": "A lightweight browser-based JavaScript compiler and editor for writing and running JS code instantly.",
+  "short_name": "CompileFusion",
+  "name": "CompileFusion - AI Developer Platform",
+  "description": "CompileFusion is an AI-powered developer platform featuring JavaScript Compiler, HTML Previewer, JSON Diff Tool, AI Code Generation, Bug Fixing, Code Refactoring, Code Optimization, and Code Explanation.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2563EB",
+  "background_color": "#FFFFFF",
+  "categories": ["developer", "productivity", "education", "utilities"],
   "icons": [
     {
       "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "sizes": "16x16 24x24 32x32 48x48 64x64",
       "type": "image/x-icon"
     },
     {
       "src": "logo.png",
+      "sizes": "192x192",
       "type": "image/png",
-      "sizes": "192x192"
+      "purpose": "any maskable"
     },
     {
       "src": "logo.png",
+      "sizes": "512x512",
       "type": "image/png",
-      "sizes": "512x512"
+      "purpose": "any maskable"
     }
-  ],
-  "start_url": ".",
-  "scope": ".",
-  "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#000000"
+  ]
 }

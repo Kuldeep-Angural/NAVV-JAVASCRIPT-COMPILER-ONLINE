@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-const theme = createTheme({
+const JSCompilerTheme = createTheme({
   palette: {
     primary: {
       main: '#22c55e',
@@ -69,4 +69,4 @@ const theme = createTheme({
   },
 });
 
-export default theme;
+export default JSCompilerTheme;
